@@ -1,3 +1,4 @@
+//调试显示指针越界，待修改
 #include <iostream>
 #include <string>
 using namespace std;
