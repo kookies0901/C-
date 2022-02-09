@@ -1,0 +1,87 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+const int _Size = 26;
+
+struct TrieTreeNode {
+	int num;			// (标记该节点是否可以形成一个单词，如果num!=0, 则根节点到该节点可以形成一个单词)
+	TrieTreeNode* next[_Size];
+	/*
+	TrieTreeNode() {
+		num = 1;
+		for (int i = 0; i < _Size; i++) {
+			next[i] = NULL;
+		}
+	}
+	*/
+};
+
+//创建Trie节点树
+TrieTreeNode* createTrie() {
+	TrieTreeNode* node = new TrieTreeNode;
+	for (int i = 0; i < _Size; i++) {//每个节点有26个子节点，初始化
+		node->next[i] = NULL;
+	}
+	node->num = 1;
+	return node;
+}
+
+//插入一个字符串
+void Insert(TrieTreeNode* root, char* str) {
+	TrieTreeNode* p = root;
+	int len = strlen(str);
+
+	for (int i = 0; i < len; i++) {//循环插入字符
+		int index = str[i] - 'a';
+		if (p->next[index] == NULL) {  //为空则新建节点并且给节点的26个子节点初始化
+			TrieTreeNode* temp = createTrie();
+			p->next[index] = temp;
+			p = p->next[index];  //类似于自顶向下建树的过程
+		}
+		else {
+			p = p->next[index];//不为空则说明已经存在相同前缀，p指向插入字符串str的下一字符
+			p->num++;
+		}
+	}
+}
+
+//查找字符串
+int Trie_Search_str(TrieTreeNode* root, char* str) {
+	TrieTreeNode* p = root;
+	int len = strlen(str);
+	int _nums = 0;
+	for (int i = 0; i < len; i++) {
+		int index = str[i] - 'a';
+		if (p->next[index] == NULL) {
+			cout << "不存在字符串(前缀): ";
+			_nums = 0;
+			return 0;
+		}
+		else {
+			p = p->next[index];
+			_nums = p->num;
+		}
+	}
+	return _nums;
+}
+
+/**************************************************************************************/
+//从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串
+
+
+
+
+int main(void) {
+	TrieTreeNode *root = new TrieTreeNode;
+	root->num = 0;
+	for (int i = 0; i < _Size; i++) {
+		root->next[i] = NULL;
+	}
+	char words1[] = "thethere";
+	char* words = words1;
+	Insert(root,words);
+	Trie_Search_str(root, words);
+	system("pause");
+	return 0;
+}
